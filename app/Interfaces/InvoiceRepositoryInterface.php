@@ -5,6 +5,7 @@ namespace App\Interfaces;
 interface InvoiceRepositoryInterface
 {
     public function getAllInvoices($userID);
+    public function getRecentInvoices($userID);
     public function getInvoiceById($InvoiceID);
     public function deleteInvoice($InvoiceID);
     public function createInvoice(array $invoiceDetails);

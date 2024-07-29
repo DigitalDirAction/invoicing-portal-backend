@@ -17,6 +17,14 @@ class InvoiceRepository implements InvoiceRepositoryInterface
             ->where('created_by', $userID)
             ->paginate(10);
     }
+    public function getRecentInvoices($userID)
+    {
+        return Invoice::with('invoiceServices', 'bankingDetail')
+            ->where('created_by', $userID)
+            ->orderBy('id', 'desc')
+            ->limit(10)
+            ->get();
+    }
     public function createInvoice(array $invoiceDetails)
     {
         return Invoice::create($invoiceDetails);

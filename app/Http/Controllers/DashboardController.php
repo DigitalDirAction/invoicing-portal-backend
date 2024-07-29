@@ -42,6 +42,19 @@ class DashboardController extends Controller
         }
     }
 
+    public function getRecentInvoices(Request $request): JsonResponse
+    {
+        try {
+            $userID = Auth::id();
+            $recentInvoices = $this->invoiceRepository->getRecentInvoices($userID);
+            $reponse = getResponse($recentInvoices, '', "Dashboard Data", 200);
+            return $this->respondWithSuccess($reponse);
+        } catch (\Exception $e) {
+            $reponse = getResponse('', '', '', 404);
+            return $this->respondWithSuccess($reponse);
+        }
+    }
+
     /**
      * Show the form for creating a new resource.
      */

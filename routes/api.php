@@ -55,4 +55,5 @@ Route::middleware(['auth:sanctum', AdminMiddleware::class])->group(function () {
     Route::post('/delete_payment/{paymentID}', [PaymentsController::class, 'destroy']);
 
     Route::get('/dashboard_data', [DashboardController::class, 'index']);
+    Route::get('/recent_invoices', [DashboardController::class, 'getRecentInvoices']);
 });
