@@ -28,7 +28,7 @@ class BankingDetailController extends Controller
             return $this->respondWithSuccess($reponse);
 
         } catch (\Exception $e) {
-            $reponse = getResponse('', '', $e->getMessage(), 404);
+            $reponse = getResponse('', '', '', 404);
             return $this->respondWithSuccess($reponse);
         }
     }
@@ -54,7 +54,7 @@ class BankingDetailController extends Controller
             return $this->respondWithSuccess($reponse);
 
         } catch (\Exception $e) {
-            $reponse = getResponse('', '', $e->getMessage(), 404);
+            $reponse = getResponse('', '', '', 404);
             return $this->respondWithSuccess($reponse);
         }
     }
@@ -98,7 +98,7 @@ class BankingDetailController extends Controller
             return $this->respondWithSuccess($reponse);
 
         } catch (\Exception $e) {
-            $reponse = getResponse('', '', $e->getMessage(), 404);
+            $reponse = getResponse('', '', '', 404);
             return $this->respondWithSuccess($reponse);
         }
     }
@@ -121,7 +121,7 @@ class BankingDetailController extends Controller
             return $this->respondWithSuccess($reponse);
 
         } catch (\Exception $e) {
-            $reponse = getResponse('', '', $e->getMessage(), 404);
+            $reponse = getResponse('', '', '', 404);
             return $this->respondWithSuccess($reponse);
         }
     }

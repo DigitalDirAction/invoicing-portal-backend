@@ -30,7 +30,7 @@ class InvoiceController extends Controller
             return $this->respondWithSuccess($reponse);
 
         } catch (\Exception $e) {
-            $reponse = getResponse('', '', $e->getMessage(), 404);
+            $reponse = getResponse('', '', '', 404);
             return $this->respondWithSuccess($reponse);
         }
     }
@@ -101,7 +101,7 @@ class InvoiceController extends Controller
             return $this->respondWithSuccess($response);
         } catch (\Exception $e) {
             // Handle exceptions and prepare the error response
-            $response = getResponse('', '', $e->getMessage(), 404);
+            $response = getResponse('', '', '', 404);
             return $this->respondWithSuccess($response);
         }
     }
@@ -168,7 +168,7 @@ class InvoiceController extends Controller
             $response = getResponse('', '', "Invoice Updated successfully", 201);
             return $this->respondWithSuccess($response);
         } catch (\Exception $e) {
-            $response = getResponse('', '', $e->getMessage(), 404);
+            $response = getResponse('', '', '', 404);
             return $this->respondWithSuccess($response);
         }
     }
@@ -191,7 +191,7 @@ class InvoiceController extends Controller
             return $this->respondWithSuccess($reponse);
 
         } catch (\Exception $e) {
-            $reponse = getResponse('', '', $e->getMessage(), 404);
+            $reponse = getResponse('', '', '', 404);
             return $this->respondWithSuccess($reponse);
         }
     }

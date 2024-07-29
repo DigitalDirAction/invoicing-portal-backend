@@ -28,7 +28,7 @@ class PaymentsController extends Controller
             return $this->respondWithSuccess($reponse);
 
         } catch (\Exception $e) {
-            $reponse = getResponse('', '', $e->getMessage(), 404);
+            $reponse = getResponse('', '', '', 404);
             return $this->respondWithSuccess($reponse);
         }
     }
@@ -74,7 +74,7 @@ class PaymentsController extends Controller
             $response = getResponse($payment, '', "Payment added successfully", 201);
             return $this->respondWithSuccess($response);
         } catch (\Exception $e) {
-            $response = getResponse('', '', $e->getMessage(), 404);
+            $response = getResponse('', '', '', 404);
             return $this->respondWithSuccess($response);
         }
     }
@@ -137,7 +137,7 @@ class PaymentsController extends Controller
             $response = getResponse($payment, '', "Payment added successfully", 201);
             return $this->respondWithSuccess($response);
         } catch (\Exception $e) {
-            $response = getResponse('', '', $e->getMessage(), 404);
+            $response = getResponse('', '', '', 404);
             return $this->respondWithSuccess($response);
         }
     }
@@ -160,7 +160,7 @@ class PaymentsController extends Controller
             return $this->respondWithSuccess($reponse);
 
         } catch (\Exception $e) {
-            $reponse = getResponse('', '', $e->getMessage(), 404);
+            $reponse = getResponse('', '', '', 404);
             return $this->respondWithSuccess($reponse);
         }
     }

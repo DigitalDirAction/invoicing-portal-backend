@@ -40,7 +40,7 @@ class UserController extends Controller
             return $this->respondWithSuccess($reponse);
 
         } catch (\Exception $e) {
-            $reponse = getResponse('', '', $e->getMessage(), 404);
+            $reponse = getResponse('', '', '', 404);
             return $this->respondWithSuccess($reponse);
         }
     }
@@ -77,7 +77,7 @@ class UserController extends Controller
             return $this->respondWithSuccess($response);
 
         } catch (\Exception $e) {
-            $response = getResponse('', '', $e->getMessage(), 500);
+            $response = getResponse('', '', '', 500);
             return $this->respondWithSuccess($response);
         }
     }
@@ -146,7 +146,7 @@ class UserController extends Controller
 
         } catch (\Exception $e) {
 
-            $reponse = getResponse('', '', $e->getMessage(), 404);
+            $reponse = getResponse('', '', '', 404);
             return $this->respondWithSuccess($reponse);
         }
     }
@@ -297,7 +297,7 @@ class UserController extends Controller
             return $this->respondWithSuccess($reponse);
 
         } catch (\Exception $e) {
-            $reponse = getResponse('', '', $e->getMessage(), 404);
+            $reponse = getResponse('', '', '', 404);
             return $this->respondWithSuccess($reponse);
         }
     }
@@ -315,7 +315,7 @@ class UserController extends Controller
             return $this->respondWithSuccess($reponse);
 
         } catch (\Exception $e) {
-            $reponse = getResponse('', '', $e->getMessage(), 404);
+            $reponse = getResponse('', '', '', 404);
             return $this->respondWithSuccess($reponse);
         }
     }

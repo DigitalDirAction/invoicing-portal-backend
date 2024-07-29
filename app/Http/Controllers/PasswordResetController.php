@@ -58,7 +58,7 @@ class PasswordResetController extends Controller
 
         } catch (\Exception $e) {
 
-            $reponse = getResponse('', '', $e->getMessage(), 404);
+            $reponse = getResponse('', '', '', 404);
             return $this->respondWithSuccess($reponse);
         }
     }
