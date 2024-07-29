@@ -64,7 +64,7 @@
         </div>
         <div class="content">
             <p>We received a request to reset your password. Click the button below to reset your password:</p>
-            <a href="{{ env('REACT_APP_URL') }}/signin/newpass?token={{$token}}" class="button">Reset Password</a>
+            <a href="{{ url('password/reset', $token) }}" class="button">Reset Password</a>
             <p>If you did not request a password reset, please ignore this email or contact support if you have
                 questions.</p>
         </div>

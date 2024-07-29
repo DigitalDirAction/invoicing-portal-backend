@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use Illuminate\Support\Facades\Password;
 use App\Interfaces\UserRepositoryInterface;
+use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use InvalidArgumentException;
 
@@ -93,8 +94,8 @@ class UserRepository implements UserRepositoryInterface
 
     public function logoutUser()
     {
-        $user = auth()->user();
-        dd('asim');
+        $user = Auth::user();
+        dd($user);
         if ($user) {
             $user->tokens()->delete();
             return response()->json(['message' => 'Logged out successfully.'], 200);

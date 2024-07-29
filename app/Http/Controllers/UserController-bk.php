@@ -2,9 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\JsonResponse;
@@ -21,64 +19,45 @@ use F9Web\ApiResponseHelpers;
 use Carbon\Carbon;
 use Illuminate\Auth\Events\Registered;
 
+
 class UserController extends Controller
 {
     use ApiResponseHelpers;
+
     public function __construct(private UserRepositoryInterface $userRepository)
     {
     }
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+
+    public function index(Request $request, $userId)
     {
-        try {
-
-            $user = $this->userRepository->getAllUsers();
-
-            $reponse = getResponse($user, '', "Users List", 201);
-            return $this->respondWithSuccess($reponse);
-
-        } catch (\Exception $e) {
-            $reponse = getResponse('', '', $e->getMessage(), 404);
-            return $this->respondWithSuccess($reponse);
-        }
     }
 
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request): JsonResponse
     {
         try {
-            $userDetails = $request->validate([
-                'name' => 'required|string|unique:users,name',
-                'email' => 'required|email|unique:users,email|max:255',
-                'password' => 'required|string|min:8|confirmed',
-                'company' => 'required|string|max:255',
-                'industry' => 'required|string|max:255',
-                'country' => 'required|string|max:255',
-                'phone_number' => 'required|string|max:20|regex:/^[0-9+\(\)#\.\s\/ext-]+$/',
-            ]);
 
+            $userDetails = $request->validate([
+                'name' => 'required',
+                'email' => 'email|unique:users,email',
+                'password' => 'required|min:8|confirmed',
+                'company' => 'required',
+                'industry' => 'required',
+                'country' => 'required',
+                'phone_number' => 'required',
+            ]);
+            dd($userDetails);
             $roleId = '1';
 
             $user = $this->userRepository->createUser($userDetails, $roleId);
+
             $auth_token = $user->createToken($user->email)->plainTextToken;
-
             event(new Registered($user));
-
-            $response = getResponse($user, $auth_token, "User Register Successfully", 201);
-            return $this->respondWithSuccess($response);
-
-        } catch (ValidationException $e) {
-            $response = getResponse('', $e->errors(), 'Validation failed', 422);
-            return $this->respondWithSuccess($response);
+            $reponse = getResponse($user, $auth_token, "User Register Successfully", 201);
+            return $this->respondWithSuccess($reponse);
 
         } catch (\Exception $e) {
-            $response = getResponse('', '', $e->getMessage(), 500);
-            return $this->respondWithSuccess($response);
+            $reponse = getResponse('', '', '', 404);
+            return $this->respondWithSuccess($reponse);
         }
     }
 
@@ -199,29 +178,74 @@ class UserController extends Controller
 
     }
 
-    public function logoutUser(Request $request)
+    public function getLoginUserData(Request $request)
     {
         try {
-            // Logout the authenticated user
-            Auth::logout();
             $user = Auth::user();
 
-            if ($user) {
-                $user->tokens()->delete();
+            if (!empty($user)) {
+
+                $user->load([
+                    'roles' => function ($query) {
+                        $query->select('id', 'name');
+                    }
+                ]);
+
+                $user->roles->makeHidden('pivot');
+
+                $reponse = getResponse($user, '', "User Data", 200);
 
             } else {
-                $response = getResponse('', '', "No authenticated user found.", 401);
+                $reponse = getResponse($user, '', "UnAuthorized", 403);
             }
-            $response = getResponse('', '', "Logged out successfully", 200);
-            return $this->respondWithSuccess($response);
 
+            return $this->respondWithSuccess($reponse);
         } catch (\Exception $e) {
-            $response = getResponse('', '', 'Oops! Something went wrong', 500);
-            return $this->respondWithSuccess($response);
-        }
 
+            $reponse = getResponse('', '', 'Oops! Something went wrong', 404);
+            return $this->respondWithSuccess($reponse);
+        }
     }
 
+    public function logout(Request $request)
+    {
+        try {
+
+            auth::user()->tokens()->delete();
+            $reponse = getResponse('', '', "User Logout Successfully", 200);
+            return $this->respondWithSuccess($reponse);
+
+        } catch (\Exception $e) {
+
+            $reponse = getResponse('', '', 'Oops! Something went wrong', 404);
+            return $this->respondWithSuccess($reponse);
+        }
+    }
+
+    public function update(UpdateUserRequest $request): JsonResponse
+    {
+        try {
+
+            $userDetails = $request->validated();
+
+            if ($userDetails['email'] != $userDetails['confirm_email']) {
+                $reponse = getResponse('', '', "Oops! Email & Re-Type Email does not matched", 422);
+                return $this->respondWithSuccess($reponse);
+            }
+
+            $newDetails = $request->setUserData();
+
+            $user = $this->userRepository->updateUser($userDetails['user_id'], $newDetails, $userDetails['role_id']);
+
+            $reponse = getResponse('', '', "User Updated Successfully", 200);
+            return $this->respondWithSuccess($reponse);
+
+        } catch (\Exception $e) {
+
+            $reponse = getResponse('', '', 'Oops! Something went wrong', 404);
+            return $this->respondWithSuccess($reponse);
+        }
+    }
 
     public function userProfile(UserProfileRequest $request): JsonResponse
     {
@@ -253,69 +277,16 @@ class UserController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Request $request): JsonResponse
+    public function destroy(Request $request)
     {
         try {
+            $user = $this->userRepository->deleteUser($request->user_id);
 
-            $user = Auth::user();
-
-            $reponse = getResponse($user, '', "User Data", 201);
+            $reponse = getResponse('', '', "User Deleted Successfully", 200);
             return $this->respondWithSuccess($reponse);
-
         } catch (\Exception $e) {
-            $reponse = getResponse('', '', '', 404);
-            return $this->respondWithSuccess($reponse);
-        }
-    }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request)
-    {
-        try {
-
-            $userDetails = $request->validate([
-                'user_id' => 'required',
-                'name' => 'required|string|unique:users,name',
-                'email' => 'required|email|unique:users,email,' . $request->user_id,
-                'company' => 'required|string|max:255',
-                'industry' => 'required|string|max:255',
-                'country' => 'required|string|max:255',
-                'phone_number' => 'required|string|max:20|regex:/^[0-9+\(\)#\.\s\/ext-]+$/',
-            ]);
-
-            $roleId = '1';
-            $userID = $request->user_id;
-
-            $user = $this->userRepository->updateUser($userID, $userDetails, $roleId);
-
-            $reponse = getResponse($user, '', "User Updated Successfully", 201);
-            return $this->respondWithSuccess($reponse);
-
-        } catch (\Exception $e) {
-            $reponse = getResponse('', '', $e->getMessage(), 404);
-            return $this->respondWithSuccess($reponse);
-        }
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Request $request, $customerID)
-    {
-        try {
-
-            $user = $this->userRepository->deleteUser($customerID);
-
-            $reponse = getResponse($user, '', "User Deleted Successfully", 201);
-            return $this->respondWithSuccess($reponse);
-
-        } catch (\Exception $e) {
-            $reponse = getResponse('', '', $e->getMessage(), 404);
+            $reponse = getResponse('', '', 'Oops! Something went wrong', 404);
             return $this->respondWithSuccess($reponse);
         }
     }
@@ -364,4 +335,5 @@ class UserController extends Controller
             return $this->respondWithSuccess($reponse);
         }
     }
+
 }
