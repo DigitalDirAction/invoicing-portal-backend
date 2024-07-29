@@ -36,11 +36,11 @@ class UserController extends Controller
 
             $user = $this->userRepository->getAllUsers();
 
-            $reponse = getResponse($user, '', "Users List", 201);
+            $reponse = getResponse($user, '', "Users List", 200);
             return $this->respondWithSuccess($reponse);
 
         } catch (\Exception $e) {
-            $reponse = getResponse('', '', '', 404);
+            $reponse = getResponse('', '', 'Oops! Something went wrong', 500);
             return $this->respondWithSuccess($reponse);
         }
     }
@@ -77,7 +77,7 @@ class UserController extends Controller
             return $this->respondWithSuccess($response);
 
         } catch (\Exception $e) {
-            $response = getResponse('', '', '', 500);
+            $response = getResponse('', '', 'Oops! Something went wrong', 500);
             return $this->respondWithSuccess($response);
         }
     }
@@ -106,7 +106,7 @@ class UserController extends Controller
             return $this->respondWithSuccess($reponse);
         } catch (\Exception $e) {
 
-            $reponse = getResponse('', '', 'Oops! Something went wrong', 404);
+            $reponse = getResponse('', '', 'Oops! Something went wrong', 500);
             return $this->respondWithSuccess($reponse);
         }
     }
@@ -146,7 +146,7 @@ class UserController extends Controller
 
         } catch (\Exception $e) {
 
-            $reponse = getResponse('', '', '', 404);
+            $reponse = getResponse('', '', 'Oops! Something went wrong', 500);
             return $this->respondWithSuccess($reponse);
         }
     }
@@ -193,7 +193,7 @@ class UserController extends Controller
             return $this->respondWithSuccess($reponse);
         } catch (\Exception $e) {
 
-            $reponse = getResponse('', '', 'Oops! Something went wrong', 404);
+            $reponse = getResponse('', '', 'Oops! Something went wrong', 500);
             return $this->respondWithSuccess($reponse);
         }
 
@@ -248,7 +248,7 @@ class UserController extends Controller
 
         } catch (\Exception $e) {
 
-            $reponse = getResponse('', '', 'Oops! Something went wrong', 404);
+            $reponse = getResponse('', '', 'Oops! Something went wrong', 500);
             return $this->respondWithSuccess($reponse);
         }
     }
@@ -262,11 +262,11 @@ class UserController extends Controller
 
             $user = Auth::user();
 
-            $reponse = getResponse($user, '', "User Data", 201);
+            $reponse = getResponse($user, '', "User Data", 200);
             return $this->respondWithSuccess($reponse);
 
         } catch (\Exception $e) {
-            $reponse = getResponse('', '', '', 404);
+            $reponse = getResponse('', '', 'Oops! Something went wrong', 500);
             return $this->respondWithSuccess($reponse);
         }
     }
@@ -297,7 +297,7 @@ class UserController extends Controller
             return $this->respondWithSuccess($reponse);
 
         } catch (\Exception $e) {
-            $reponse = getResponse('', '', '', 404);
+            $reponse = getResponse('', '', 'Oops! Something went wrong', 500);
             return $this->respondWithSuccess($reponse);
         }
     }
@@ -311,11 +311,11 @@ class UserController extends Controller
 
             $user = $this->userRepository->deleteUser($customerID);
 
-            $reponse = getResponse($user, '', "User Deleted Successfully", 201);
+            $reponse = getResponse($user, '', "User Deleted Successfully", 200);
             return $this->respondWithSuccess($reponse);
 
         } catch (\Exception $e) {
-            $reponse = getResponse('', '', '', 404);
+            $reponse = getResponse('', '', 'Oops! Something went wrong', 500);
             return $this->respondWithSuccess($reponse);
         }
     }
@@ -339,7 +339,7 @@ class UserController extends Controller
 
         } catch (\Exception $e) {
 
-            $reponse = getResponse('', '', 'Oops! Something went wrong', 404);
+            $reponse = getResponse('', '', 'Oops! Something went wrong', 500);
             return $this->respondWithSuccess($reponse);
         }
     }
@@ -360,7 +360,7 @@ class UserController extends Controller
 
         } catch (\Exception $e) {
 
-            $reponse = getResponse('', '', 'Oops! Something went wrong', 404);
+            $reponse = getResponse('', '', 'Oops! Something went wrong', 500);
             return $this->respondWithSuccess($reponse);
         }
     }

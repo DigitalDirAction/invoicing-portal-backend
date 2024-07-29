@@ -24,11 +24,11 @@ class PaymentsController extends Controller
 
             $user = $this->paymentsRepository->getAllPayments($invoiceID);
 
-            $reponse = getResponse($user, '', "Payments List", 201);
+            $reponse = getResponse($user, '', "Payments List", 200);
             return $this->respondWithSuccess($reponse);
 
         } catch (\Exception $e) {
-            $reponse = getResponse('', '', '', 404);
+            $reponse = getResponse('', '', 'Oops! Something went wrong', 500);
             return $this->respondWithSuccess($reponse);
         }
     }
@@ -74,7 +74,7 @@ class PaymentsController extends Controller
             $response = getResponse($payment, '', "Payment added successfully", 201);
             return $this->respondWithSuccess($response);
         } catch (\Exception $e) {
-            $response = getResponse('', '', '', 404);
+            $response = getResponse('', '', 'Oops! Something went wrong', 500);
             return $this->respondWithSuccess($response);
         }
     }
@@ -88,11 +88,11 @@ class PaymentsController extends Controller
 
             $user = $this->paymentsRepository->getPaymentById($paymentID);
 
-            $reponse = getResponse($user, '', "Payment Data", 201);
+            $reponse = getResponse($user, '', "Payment Data", 200);
             return $this->respondWithSuccess($reponse);
 
         } catch (\Exception $e) {
-            $reponse = getResponse('', '', '', 404);
+            $reponse = getResponse('', '', 'Oops! Something went wrong', 500);
             return $this->respondWithSuccess($reponse);
         }
     }
@@ -137,7 +137,7 @@ class PaymentsController extends Controller
             $response = getResponse($payment, '', "Payment added successfully", 201);
             return $this->respondWithSuccess($response);
         } catch (\Exception $e) {
-            $response = getResponse('', '', '', 404);
+            $response = getResponse('', '', 'Oops! Something went wrong', 500);
             return $this->respondWithSuccess($response);
         }
     }
@@ -152,7 +152,7 @@ class PaymentsController extends Controller
             $user = $this->paymentsRepository->deletePayment($paymentID);
 
             if ($user) {
-                $reponse = getResponse($user, '', "Payment Deleted Successfully", 201);
+                $reponse = getResponse($user, '', "Payment Deleted Successfully", 200);
 
             } else {
                 $reponse = getResponse($user, '', "Payment Not Found", 404);
@@ -160,7 +160,7 @@ class PaymentsController extends Controller
             return $this->respondWithSuccess($reponse);
 
         } catch (\Exception $e) {
-            $reponse = getResponse('', '', '', 404);
+            $reponse = getResponse('', '', 'Oops! Something went wrong', 500);
             return $this->respondWithSuccess($reponse);
         }
     }

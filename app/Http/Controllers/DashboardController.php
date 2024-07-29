@@ -7,6 +7,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use App\Interfaces\PaymentsRepositoryInterface;
 use App\Interfaces\InvoiceRepositoryInterface;
+use Illuminate\Support\Facades\Log;
 use F9Web\ApiResponseHelpers;
 
 class DashboardController extends Controller
@@ -21,7 +22,7 @@ class DashboardController extends Controller
     public function index(Request $request): JsonResponse
     {
         try {
-
+            dd(Auth::check());
             $userID = Auth::id();
             $from_date = $request->query('from_date');
             $to_date = $request->query('to_date');
@@ -37,7 +38,7 @@ class DashboardController extends Controller
             return $this->respondWithSuccess($reponse);
 
         } catch (\Exception $e) {
-            $reponse = getResponse('', '', '', 404);
+            $reponse = getResponse('', '', 'Oops! Something went wrong', 500);
             return $this->respondWithSuccess($reponse);
         }
     }
@@ -50,7 +51,7 @@ class DashboardController extends Controller
             $reponse = getResponse($recentInvoices, '', "Dashboard Data", 200);
             return $this->respondWithSuccess($reponse);
         } catch (\Exception $e) {
-            $reponse = getResponse('', '', '', 404);
+            $reponse = getResponse('', '', 'Oops! Something went wrong', 500);
             return $this->respondWithSuccess($reponse);
         }
     }

@@ -27,11 +27,11 @@ class CustomerController extends Controller
 
             $user = $this->customerRepository->getAllCustomers();
 
-            $reponse = getResponse($user, '', "Customers List", 201);
+            $reponse = getResponse($user, '', "Customers List", 200);
             return $this->respondWithSuccess($reponse);
 
         } catch (\Exception $e) {
-            $reponse = getResponse('', '', '', 404);
+            $reponse = getResponse('', '', 'Oops! Something went wrong', 500);
             return $this->respondWithSuccess($reponse);
         }
     }
@@ -75,7 +75,7 @@ class CustomerController extends Controller
             return $this->respondWithSuccess($reponse);
 
         } catch (\Exception $e) {
-            $reponse = getResponse('', '', '', 404);
+            $reponse = getResponse('', '', 'Oops! Something went wrong', 500);
             return $this->respondWithSuccess($reponse);
         }
     }
@@ -89,11 +89,11 @@ class CustomerController extends Controller
 
             $user = $this->customerRepository->getCustomerById($customerID);
 
-            $reponse = getResponse($user, '', "Customer Data", 201);
+            $reponse = getResponse($user, '', "Customer Data", 200);
             return $this->respondWithSuccess($reponse);
 
         } catch (\Exception $e) {
-            $reponse = getResponse('', '', '', 404);
+            $reponse = getResponse('', '', 'Oops! Something went wrong', 500);
             return $this->respondWithSuccess($reponse);
         }
     }
@@ -135,7 +135,7 @@ class CustomerController extends Controller
             return $this->respondWithSuccess($reponse);
 
         } catch (\Exception $e) {
-            $reponse = getResponse('', '', '', 404);
+            $reponse = getResponse('', '', 'Oops! Something went wrong', 500);
             return $this->respondWithSuccess($reponse);
         }
     }
@@ -149,11 +149,11 @@ class CustomerController extends Controller
 
             $user = $this->customerRepository->deleteCustomer($customerID);
 
-            $reponse = getResponse($user, '', "Customer Deleted Successfully", 201);
+            $reponse = getResponse($user, '', "Customer Deleted Successfully", 200);
             return $this->respondWithSuccess($reponse);
 
         } catch (\Exception $e) {
-            $reponse = getResponse('', '', '', 404);
+            $reponse = getResponse('', '', 'Oops! Something went wrong', 500);
             return $this->respondWithSuccess($reponse);
         }
     }

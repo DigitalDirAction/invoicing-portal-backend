@@ -58,7 +58,7 @@ class PasswordResetController extends Controller
 
         } catch (\Exception $e) {
 
-            $reponse = getResponse('', '', '', 404);
+            $reponse = getResponse('', '', 'Oops! Something went wrong', 500);
             return $this->respondWithSuccess($reponse);
         }
     }
@@ -75,7 +75,7 @@ class PasswordResetController extends Controller
                 return $this->respondWithSuccess($reponse);
             }
         } catch (\Exception $e) {
-            $reponse = getResponse('', '', 'Oops! Something went wrong', 404);
+            $reponse = getResponse('', '', 'Oops! Something went wrong', 500);
             return $this->respondWithSuccess($reponse);
         }
 
@@ -108,7 +108,7 @@ class PasswordResetController extends Controller
             $reponse = getResponse($user, '', "Password Reset Successfully", 200);
             return $this->respondWithSuccess($reponse);
         } catch (\Exception $e) {
-            $reponse = getResponse('', '', 'Oops! Something went wrong', 404);
+            $reponse = getResponse('', '', 'Oops! Something went wrong', 500);
             return $this->respondWithSuccess($reponse);
         }
     }

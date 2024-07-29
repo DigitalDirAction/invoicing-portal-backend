@@ -26,11 +26,11 @@ class InvoiceController extends Controller
             $userID = Auth::id();
             $user = $this->invoiceRepository->getAllInvoices($userID);
 
-            $reponse = getResponse($user, '', "Invoices List", 201);
+            $reponse = getResponse($user, '', "Invoices List", 200);
             return $this->respondWithSuccess($reponse);
 
         } catch (\Exception $e) {
-            $reponse = getResponse('', '', '', 404);
+            $reponse = getResponse('', '', 'Oops! Something went wrong', 500);
             return $this->respondWithSuccess($reponse);
         }
     }
@@ -101,7 +101,7 @@ class InvoiceController extends Controller
             return $this->respondWithSuccess($response);
         } catch (\Exception $e) {
             // Handle exceptions and prepare the error response
-            $response = getResponse('', '', '', 404);
+            $response = getResponse('', '', 'Oops! Something went wrong', 500);
             return $this->respondWithSuccess($response);
         }
     }
@@ -115,11 +115,11 @@ class InvoiceController extends Controller
 
             $user = $this->invoiceRepository->getInvoiceById($InvoiceID);
 
-            $reponse = getResponse($user, '', "Invoice Data", 201);
+            $reponse = getResponse($user, '', "Invoice Data", 200);
             return $this->respondWithSuccess($reponse);
 
         } catch (\Exception $e) {
-            $reponse = getResponse('', '', '', 404);
+            $reponse = getResponse('', '', 'Oops! Something went wrong', 500);
             return $this->respondWithSuccess($reponse);
         }
     }
@@ -168,7 +168,7 @@ class InvoiceController extends Controller
             $response = getResponse('', '', "Invoice Updated successfully", 201);
             return $this->respondWithSuccess($response);
         } catch (\Exception $e) {
-            $response = getResponse('', '', '', 404);
+            $response = getResponse('', '', 'Oops! Something went wrong', 500);
             return $this->respondWithSuccess($response);
         }
     }
@@ -183,7 +183,7 @@ class InvoiceController extends Controller
             $user = $this->invoiceRepository->deleteInvoice($InvoiceID);
 
             if ($user) {
-                $reponse = getResponse($user, '', "Invoice Deleted Successfully", 201);
+                $reponse = getResponse($user, '', "Invoice Deleted Successfully", 200);
 
             } else {
                 $reponse = getResponse($user, '', "Invoice Not Found", 404);
@@ -191,7 +191,7 @@ class InvoiceController extends Controller
             return $this->respondWithSuccess($reponse);
 
         } catch (\Exception $e) {
-            $reponse = getResponse('', '', '', 404);
+            $reponse = getResponse('', '', 'Oops! Something went wrong', 500);
             return $this->respondWithSuccess($reponse);
         }
     }

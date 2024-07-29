@@ -24,11 +24,11 @@ class BankingDetailController extends Controller
             $userID = Auth::id();
             $user = $this->bankingDetailRepository->getAllBanks($userID);
 
-            $reponse = getResponse($user, '', "Banks List", 201);
+            $reponse = getResponse($user, '', "Banks List", 200);
             return $this->respondWithSuccess($reponse);
 
         } catch (\Exception $e) {
-            $reponse = getResponse('', '', '', 404);
+            $reponse = getResponse('', '', 'Oops! Something went wrong', 500);
             return $this->respondWithSuccess($reponse);
         }
     }
@@ -54,7 +54,7 @@ class BankingDetailController extends Controller
             return $this->respondWithSuccess($reponse);
 
         } catch (\Exception $e) {
-            $reponse = getResponse('', '', '', 404);
+            $reponse = getResponse('', '', 'Oops! Something went wrong', 500);
             return $this->respondWithSuccess($reponse);
         }
     }
@@ -68,11 +68,11 @@ class BankingDetailController extends Controller
 
             $user = $this->bankingDetailRepository->getBankId($bankID);
 
-            $reponse = getResponse($user, '', "Bank Data", 201);
+            $reponse = getResponse($user, '', "Bank Data", 200);
             return $this->respondWithSuccess($reponse);
 
         } catch (\Exception $e) {
-            $reponse = getResponse('', '', '', 404);
+            $reponse = getResponse('', '', 'Oops! Something went wrong', 500);
             return $this->respondWithSuccess($reponse);
         }
     }
@@ -98,7 +98,7 @@ class BankingDetailController extends Controller
             return $this->respondWithSuccess($reponse);
 
         } catch (\Exception $e) {
-            $reponse = getResponse('', '', '', 404);
+            $reponse = getResponse('', '', 'Oops! Something went wrong', 500);
             return $this->respondWithSuccess($reponse);
         }
     }
@@ -113,7 +113,7 @@ class BankingDetailController extends Controller
             $user = $this->bankingDetailRepository->deleteBank($bankID);
 
             if ($user) {
-                $reponse = getResponse($user, '', "Bank Deleted Successfully", 201);
+                $reponse = getResponse($user, '', "Bank Deleted Successfully", 200);
 
             } else {
                 $reponse = getResponse($user, '', "Bank Not Found", 404);
@@ -121,7 +121,7 @@ class BankingDetailController extends Controller
             return $this->respondWithSuccess($reponse);
 
         } catch (\Exception $e) {
-            $reponse = getResponse('', '', '', 404);
+            $reponse = getResponse('', '', 'Oops! Something went wrong', 500);
             return $this->respondWithSuccess($reponse);
         }
     }
