@@ -6,6 +6,7 @@ use App\Models\Payments;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 use App\Interfaces\PaymentsRepositoryInterface;
 use F9Web\ApiResponseHelpers;
 
@@ -73,6 +74,10 @@ class PaymentsController extends Controller
 
             $response = getResponse($payment, '', "Payment added successfully", 201);
             return $this->respondWithSuccess($response);
+        } catch (ValidationException $e) {
+            $response = getResponseIfValidationFailed($e->errors(), '', 'Validation failed', 422);
+            return $this->respondWithSuccess($response);
+
         } catch (\Exception $e) {
             $response = getResponse('', '', 'Oops! Something went wrong', 500);
             return $this->respondWithSuccess($response);
@@ -136,6 +141,10 @@ class PaymentsController extends Controller
 
             $response = getResponse($payment, '', "Payment added successfully", 201);
             return $this->respondWithSuccess($response);
+        } catch (ValidationException $e) {
+            $response = getResponseIfValidationFailed($e->errors(), '', 'Validation failed', 422);
+            return $this->respondWithSuccess($response);
+
         } catch (\Exception $e) {
             $response = getResponse('', '', 'Oops! Something went wrong', 500);
             return $this->respondWithSuccess($response);

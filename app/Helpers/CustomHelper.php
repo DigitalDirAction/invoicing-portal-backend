@@ -17,6 +17,19 @@ if (!function_exists('getResponse')) {
     }
 }
 
+if (!function_exists('getResponseIfValidationFailed')) {
+    function getResponseIfValidationFailed($data, $token, $message, $status): array
+    {
+        $responseResults = [
+            'errors' => $data,
+            'token' => $token,
+            'message' => $message,
+            'status' => $status,
+        ];
+        return $responseResults;
+    }
+}
+
 function getJsonArray($value)
 {
     $array = explode(',', $value);

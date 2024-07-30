@@ -6,6 +6,7 @@ use App\Models\BankingDetail;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 use App\Interfaces\BankingDetailRepositoryInterface;
 use F9Web\ApiResponseHelpers;
 
@@ -53,6 +54,10 @@ class BankingDetailController extends Controller
             $reponse = getResponse($user, '', "Bank Add Successfully", 201);
             return $this->respondWithSuccess($reponse);
 
+        } catch (ValidationException $e) {
+            $response = getResponseIfValidationFailed($e->errors(), '', 'Validation failed', 422);
+            return $this->respondWithSuccess($response);
+
         } catch (\Exception $e) {
             $reponse = getResponse('', '', 'Oops! Something went wrong', 500);
             return $this->respondWithSuccess($reponse);
@@ -96,6 +101,10 @@ class BankingDetailController extends Controller
 
             $reponse = getResponse($user, '', "Bank Updated Successfully", 201);
             return $this->respondWithSuccess($reponse);
+
+        } catch (ValidationException $e) {
+            $response = getResponseIfValidationFailed($e->errors(), '', 'Validation failed', 422);
+            return $this->respondWithSuccess($response);
 
         } catch (\Exception $e) {
             $reponse = getResponse('', '', 'Oops! Something went wrong', 500);

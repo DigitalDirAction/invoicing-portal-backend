@@ -22,7 +22,7 @@ class DashboardController extends Controller
     public function index(Request $request): JsonResponse
     {
         try {
-            dd(Auth::check());
+
             $userID = Auth::id();
             $from_date = $request->query('from_date');
             $to_date = $request->query('to_date');

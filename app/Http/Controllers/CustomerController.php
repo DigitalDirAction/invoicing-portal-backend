@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 use App\Http\Requests\Customer\addCustomerRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Interfaces\CustomerRepositoryInterface;
@@ -74,6 +75,10 @@ class CustomerController extends Controller
             $reponse = getResponse($user, '', "Customer Add Successfully", 201);
             return $this->respondWithSuccess($reponse);
 
+        } catch (ValidationException $e) {
+            $response = getResponseIfValidationFailed($e->errors(), '', 'Validation failed', 422);
+            return $this->respondWithSuccess($response);
+
         } catch (\Exception $e) {
             $reponse = getResponse('', '', 'Oops! Something went wrong', 500);
             return $this->respondWithSuccess($reponse);
@@ -133,6 +138,10 @@ class CustomerController extends Controller
 
             $reponse = getResponse($user, '', "Customer Updated Successfully", 201);
             return $this->respondWithSuccess($reponse);
+
+        } catch (ValidationException $e) {
+            $response = getResponseIfValidationFailed($e->errors(), '', 'Validation failed', 422);
+            return $this->respondWithSuccess($response);
 
         } catch (\Exception $e) {
             $reponse = getResponse('', '', 'Oops! Something went wrong', 500);

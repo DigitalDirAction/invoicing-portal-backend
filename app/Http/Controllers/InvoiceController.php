@@ -6,6 +6,7 @@ use App\Models\Invoice;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 use App\Http\Requests\Invoices\storeInvoiceRequest;
 use App\Interfaces\InvoiceRepositoryInterface;
 use F9Web\ApiResponseHelpers;
@@ -99,6 +100,10 @@ class InvoiceController extends Controller
             // Prepare the response
             $response = getResponse('', '', "Invoice added successfully", 201);
             return $this->respondWithSuccess($response);
+        } catch (ValidationException $e) {
+            $response = getResponseIfValidationFailed($e->errors(), '', 'Validation failed', 422);
+            return $this->respondWithSuccess($response);
+
         } catch (\Exception $e) {
             // Handle exceptions and prepare the error response
             $response = getResponse('', '', 'Oops! Something went wrong', 500);
@@ -167,6 +172,10 @@ class InvoiceController extends Controller
 
             $response = getResponse('', '', "Invoice Updated successfully", 201);
             return $this->respondWithSuccess($response);
+        } catch (ValidationException $e) {
+            $response = getResponseIfValidationFailed($e->errors(), '', 'Validation failed', 422);
+            return $this->respondWithSuccess($response);
+
         } catch (\Exception $e) {
             $response = getResponse('', '', 'Oops! Something went wrong', 500);
             return $this->respondWithSuccess($response);

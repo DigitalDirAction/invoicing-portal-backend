@@ -24,12 +24,15 @@ Route::post('/email/resend-verification/{email}', [UserController::class, 'resen
 Route::post('/forgot_password', [PasswordResetController::class, 'forgotPassword']);
 Route::post('/reset_password/{token}', [PasswordResetController::class, 'resetPassword']);
 // Route for logging out the user
-Route::post('/user_profile', [UserController::class, 'userProfile']);
 Route::post('/logout_user', [UserController::class, 'logoutUser']);
-Route::middleware('auth:sanctum')->get('/login_user_data', [UserController::class, 'show']);
 
 Route::middleware(['auth:sanctum', AdminMiddleware::class])->group(function () {
-    // Route::post('/user_profile', [UserController::class, 'userProfile']);
+
+    Route::get('/login_user_data', [UserController::class, 'show']);
+    Route::post('/user_profile', [UserController::class, 'userProfile']);
+    // Route for logging out the user
+    Route::post('/logout_user', [UserController::class, 'logoutUser']);
+
     Route::post('/add_customer', [CustomerController::class, 'store']);
     Route::get('/customers_list', [CustomerController::class, 'index']);
     Route::get('/customer_data/{customerID}', [CustomerController::class, 'show']);

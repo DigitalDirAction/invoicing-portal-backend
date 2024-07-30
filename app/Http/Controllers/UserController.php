@@ -73,7 +73,7 @@ class UserController extends Controller
             return $this->respondWithSuccess($response);
 
         } catch (ValidationException $e) {
-            $response = getResponse($e->errors(), '', 'Validation failed', 422);
+            $response = getResponseIfValidationFailed($e->errors(), '', 'Validation failed', 422);
             return $this->respondWithSuccess($response);
 
         } catch (\Exception $e) {
@@ -295,6 +295,10 @@ class UserController extends Controller
 
             $reponse = getResponse($user, '', "User Updated Successfully", 201);
             return $this->respondWithSuccess($reponse);
+
+        } catch (ValidationException $e) {
+            $response = getResponseIfValidationFailed($e->errors(), '', 'Validation failed', 422);
+            return $this->respondWithSuccess($response);
 
         } catch (\Exception $e) {
             $reponse = getResponse('', '', 'Oops! Something went wrong', 500);
