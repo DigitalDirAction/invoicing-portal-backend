@@ -202,12 +202,11 @@ class UserController extends Controller
     public function logoutUser(Request $request)
     {
         try {
-            // Logout the authenticated user
-            Auth::logout();
-            $user = Auth::user();
 
-            if ($user) {
-                $user->tokens()->delete();
+            $loginUser = Auth::user();
+
+            if ($loginUser) {
+                $loginUser->tokens()->delete();
 
             } else {
                 $response = getResponse('', '', "No authenticated user found.", 401);
