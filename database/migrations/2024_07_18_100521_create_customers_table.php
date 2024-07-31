@@ -21,6 +21,8 @@ return new class extends Migration {
             $table->string('phone_number', 15)->nullable();
             $table->string('mobile_number', 15)->nullable();
             $table->text('address');
+            $table->unsignedBigInteger('created_by');
+            $table->unsignedBigInteger('updated_by');
             $table->string('logo')->nullable();
             $table->timestamps();
         });

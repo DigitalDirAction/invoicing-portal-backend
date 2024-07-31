@@ -4,7 +4,7 @@ namespace App\Interfaces;
 
 interface CustomerRepositoryInterface
 {
-    public function getAllCustomers();
+    public function getAllCustomers($createdBy);
     public function getCustomerById($CustomerID);
     public function deleteCustomer($CustomerID);
     public function createCustomer(array $userDetails, $logo);

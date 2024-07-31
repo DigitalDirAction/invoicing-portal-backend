@@ -8,9 +8,9 @@ use Illuminate\Support\Facades\Storage;
 
 class CustomerRepository implements CustomerRepositoryInterface
 {
-    public function getAllCustomers()
+    public function getAllCustomers($createdBy)
     {
-        return Customer::Paginate(15);
+        return Customer::where('created_by', $createdBy)->Paginate(10);
     }
 
     public function getCustomerById($CustomerID)

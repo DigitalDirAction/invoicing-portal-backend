@@ -25,8 +25,8 @@ class CustomerController extends Controller
     public function index()
     {
         try {
-
-            $user = $this->customerRepository->getAllCustomers();
+            $createdBy = Auth::id();
+            $user = $this->customerRepository->getAllCustomers($createdBy);
 
             $reponse = getResponse($user, '', "Customers List", 200);
             return $this->respondWithSuccess($reponse);
@@ -43,6 +43,7 @@ class CustomerController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
+        $userID = Auth::id();
         try {
 
             $userDetails = $request->validate([
@@ -57,6 +58,8 @@ class CustomerController extends Controller
                 'address' => 'required',
                 'logo' => '',
             ]);
+            $userDetails['created_by'] = $userID;
+            $userDetails['updated_by'] = $userID;
 
             $logo = '';
 
@@ -108,6 +111,7 @@ class CustomerController extends Controller
      */
     public function update(Request $request)
     {
+        $userID = Auth::id();
         try {
 
             $userDetails = $request->validate([
@@ -123,6 +127,7 @@ class CustomerController extends Controller
                 'address' => 'required',
                 'logo' => '',
             ]);
+            $userDetails['updated_by'] = $userID;
             $logo = '';
 
             if ($request->hasFile('logo')) {

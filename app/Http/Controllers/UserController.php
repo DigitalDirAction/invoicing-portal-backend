@@ -53,7 +53,7 @@ class UserController extends Controller
     {
         try {
             $userDetails = $request->validate([
-                'name' => 'required|string|unique:users,name',
+                'name' => 'required',
                 'email' => 'required|email|unique:users,email|max:255',
                 'password' => 'required|string|min:8|confirmed',
                 'company' => 'required|string|max:255',
