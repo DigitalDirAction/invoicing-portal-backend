@@ -19,6 +19,8 @@ class Customer extends Model
         'phone_number',
         'mobile_number',
         'address',
+        'created_by',
+        'updated_by',
         'logo'
     ];
 
