@@ -41,10 +41,15 @@ class InvoiceRepository implements InvoiceRepositoryInterface
     }
     public function sumOfTotalAmountOfInvoices($from_date = null, $to_date = null, $createdBy = null)
     {
-        $invoices = Invoice::where(['created_by' => $createdBy])
-            ->whereBetween('invoice_date', [$from_date, $to_date]) // Date range filter
-            ->get();
-        return $invoices->sum('total_amount');
+        $query = Invoice::query();
+        if ($createdBy) {
+            $query->where('created_by', $createdBy);
+        }
+        if ($from_date && $to_date) {
+            $query->whereBetween('invoice_date', [$from_date, $to_date]);
+        }
+        return $query->sum('total_amount');
+
     }
     public function sumOfOverdueAmountOfInvoices($from_date = null, $to_date = null, $createdBy = null)
     {
