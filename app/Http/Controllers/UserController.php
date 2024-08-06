@@ -107,7 +107,7 @@ class UserController extends Controller
             $user = $this->userRepository->findUserByEmail($data['email']);
 
             if (!$user) {
-                $reponse = getResponse('', '', "Oops! email does't exist", 401);
+                $reponse = getResponse('', '', "Email not registered", 401);
                 return $this->respondWithSuccess($reponse);
             }
 
@@ -117,7 +117,7 @@ class UserController extends Controller
             }
 
             if (!$user || !Hash::check($data['password'], $user['password'])) {
-                $reponse = getResponse('', '', "Oops! Invalid email/password", 401);
+                $reponse = getResponse('', '', "Invalid email/password", 401);
                 return $this->respondWithSuccess($reponse);
             } else {
 
