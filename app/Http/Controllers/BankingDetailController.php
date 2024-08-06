@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\BankingDetail;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\ValidationException;
+use App\Http\Requests\BankingDetail\AddBankRequest;
+use App\Http\Requests\BankingDetail\UpdateBankRequest;
 use App\Interfaces\BankingDetailRepositoryInterface;
 use F9Web\ApiResponseHelpers;
 
@@ -37,26 +37,16 @@ class BankingDetailController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request): JsonResponse
+    public function store(AddBankRequest $request): JsonResponse
     {
         try {
 
-            $userDetails = $request->validate([
-                'user_id' => 'required',
-                'bank_name' => 'required',
-                'branch_code' => 'required',
-                'account_title' => 'required',
-                'iban_number' => 'required|unique:banking_details,iban_number',
-            ]);
+            $data = $request->validated();
 
-            $user = $this->bankingDetailRepository->createBank($userDetails);
+            $user = $this->bankingDetailRepository->createBank($data);
 
             $reponse = getResponse($user, '', "Bank Add Successfully", 201);
             return $this->respondWithSuccess($reponse);
-
-        } catch (ValidationException $e) {
-            $response = getResponseIfValidationFailed($e->errors(), '', 'Validation failed', 422);
-            return $this->respondWithSuccess($response);
 
         } catch (\Exception $e) {
             $reponse = getResponse('', '', 'Oops! Something went wrong', 500);
@@ -85,26 +75,16 @@ class BankingDetailController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $bankID): JsonResponse
+    public function update(UpdateBankRequest $request, $bankID): JsonResponse
     {
         try {
 
-            $userDetails = $request->validate([
-                'bank_name' => 'required',
-                'branch_code' => 'required',
-                'account_title' => 'required',
-                'iban_number' => 'required|unique:banking_details,iban_number,' . $bankID,
-
-            ]);
+            $userDetails = $request->validated();
 
             $user = $this->bankingDetailRepository->updateBank($bankID, $userDetails);
 
             $reponse = getResponse($user, '', "Bank Updated Successfully", 201);
             return $this->respondWithSuccess($reponse);
-
-        } catch (ValidationException $e) {
-            $response = getResponseIfValidationFailed($e->errors(), '', 'Validation failed', 422);
-            return $this->respondWithSuccess($response);
 
         } catch (\Exception $e) {
             $reponse = getResponse('', '', 'Oops! Something went wrong', 500);

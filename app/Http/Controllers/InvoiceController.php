@@ -8,6 +8,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use App\Http\Requests\Invoices\storeInvoiceRequest;
+use App\Http\Requests\Invoices\UpdateInvoiceRequest;
 use App\Interfaces\InvoiceRepositoryInterface;
 use F9Web\ApiResponseHelpers;
 use Illuminate\Support\Str;
@@ -35,22 +36,13 @@ class InvoiceController extends Controller
             return $this->respondWithSuccess($reponse);
         }
     }
-    private function validateInvoiceItems($request)
-    {
-        return $request->validate([
-            'service_description' => 'sometimes|array',
-            'quantity' => 'sometimes|array',
-            'rate' => 'sometimes|array',
-            'tax' => 'sometimes|array',
-            'amount' => 'sometimes|array'
-        ]);
-    }
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request): JsonResponse
+    public function store(storeInvoiceRequest $request): JsonResponse
     {
         try {
+            $userDetails = $request->validated();
             // Generate a random invoice number
             $randomInvoiceNumber = mt_rand(100000, 999999);
             $invoiceNumber = 'INV-' . $randomInvoiceNumber;
@@ -59,24 +51,10 @@ class InvoiceController extends Controller
             $userID = Auth::id();
 
             // Validate the main invoice details
-            $invoiceDetails = $request->validate([
-                'customer_id' => 'required',
-                'bank_id' => 'required',
-                'currency' => 'required',
-                'invoice_date' => 'required',
-                'due_date' => 'required',
-                'quantity_text' => 'required',
-                'rate_text' => 'required',
-                'tax_text' => 'required',
-                'amount_text' => 'required',
-                'sub_total' => 'required',
-                'total_amount' => 'required',
-                'customer_note' => 'required',
-                'status' => 'required',
-            ]);
+            $invoiceDetails = $request->setInvoiceData();
 
             // Validate the service details
-            $serviceDetails = $this->validateInvoiceItems($request);
+            $serviceDetails = $request->setInvoiceServiceData();
 
             // Assign the generated invoice number and created_by fields
             $invoiceDetails['invoice_number'] = $invoiceNumber;
@@ -100,10 +78,6 @@ class InvoiceController extends Controller
             // Prepare the response
             $response = getResponse('', '', "Invoice added successfully", 201);
             return $this->respondWithSuccess($response);
-        } catch (ValidationException $e) {
-            $response = getResponseIfValidationFailed($e->errors(), '', 'Validation failed', 422);
-            return $this->respondWithSuccess($response);
-
         } catch (\Exception $e) {
             // Handle exceptions and prepare the error response
             $response = getResponse('', '', 'Oops! Something went wrong', 500);
@@ -132,30 +106,16 @@ class InvoiceController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $InvoiceID): JsonResponse
+    public function update(UpdateInvoiceRequest $request, $InvoiceID): JsonResponse
     {
         try {
 
 
             $invoiceService = [];
 
-            $invoiceDetails = $request->validate([
-                'customer_id' => 'required',
-                'bank_id' => 'required',
-                'currency' => 'required',
-                'invoice_date' => 'required',
-                'due_date' => 'required',
-                'quantity_text' => 'required',
-                'rate_text' => 'required',
-                'tax_text' => 'required',
-                'amount_text' => 'required',
-                'sub_total' => 'required',
-                'total_amount' => 'required',
-                'customer_note' => 'required',
-                'status' => 'required',
-            ]);
+            $invoiceDetails = $request->setInvoiceData();
 
-            $serviceDetails = $this->validateInvoiceItems($request);
+            $serviceDetails = $request->setInvoiceServiceData();
             $this->invoiceRepository->updateInvoice($InvoiceID, $invoiceDetails);
             $this->invoiceRepository->deleteInvoiceService($InvoiceID);
             for ($i = 0; $i < count($serviceDetails['service_description']); $i++) {
@@ -172,10 +132,6 @@ class InvoiceController extends Controller
 
             $response = getResponse('', '', "Invoice Updated successfully", 201);
             return $this->respondWithSuccess($response);
-        } catch (ValidationException $e) {
-            $response = getResponseIfValidationFailed($e->errors(), '', 'Validation failed', 422);
-            return $this->respondWithSuccess($response);
-
         } catch (\Exception $e) {
             $response = getResponse('', '', 'Oops! Something went wrong', 500);
             return $this->respondWithSuccess($response);

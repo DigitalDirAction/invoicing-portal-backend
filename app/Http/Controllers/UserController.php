@@ -11,7 +11,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
-use App\Http\Requests\RegisterUserRequest;
+use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Requests\LoginUserRequest;
 use App\Http\Requests\TwoFactorAuthenticationRequest;
@@ -49,18 +49,10 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request): JsonResponse
+    public function store(StoreUserRequest $request): JsonResponse
     {
         try {
-            $userDetails = $request->validate([
-                'name' => 'required',
-                'email' => 'required|email|unique:users,email|max:255',
-                'password' => 'required|string|min:8|confirmed',
-                'company' => 'required|string|max:255',
-                'industry' => 'required|string|max:255',
-                'country' => 'required|string|max:255',
-                'phone_number' => 'required|string|max:20|regex:/^[0-9+\(\)#\.\s\/ext-]+$/',
-            ]);
+            $userDetails = $request->validated();
 
             $roleId = '1';
 
@@ -70,10 +62,6 @@ class UserController extends Controller
             event(new Registered($user));
 
             $response = getResponse($user, $auth_token, "User Register Successfully", 201);
-            return $this->respondWithSuccess($response);
-
-        } catch (ValidationException $e) {
-            $response = getResponseIfValidationFailed($e->errors(), '', 'Validation failed', 422);
             return $this->respondWithSuccess($response);
 
         } catch (\Exception $e) {
@@ -273,19 +261,11 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request)
+    public function update(UpdateUserRequest $request)
     {
         try {
 
-            $userDetails = $request->validate([
-                'user_id' => 'required',
-                'name' => 'required|string|unique:users,name',
-                'email' => 'required|email|unique:users,email,' . $request->user_id,
-                'company' => 'required|string|max:255',
-                'industry' => 'required|string|max:255',
-                'country' => 'required|string|max:255',
-                'phone_number' => 'required|string|max:20|regex:/^[0-9+\(\)#\.\s\/ext-]+$/',
-            ]);
+            $userDetails = $request->validated();
 
             $roleId = '1';
             $userID = $request->user_id;
@@ -294,10 +274,6 @@ class UserController extends Controller
 
             $reponse = getResponse($user, '', "User Updated Successfully", 201);
             return $this->respondWithSuccess($reponse);
-
-        } catch (ValidationException $e) {
-            $response = getResponseIfValidationFailed($e->errors(), '', 'Validation failed', 422);
-            return $this->respondWithSuccess($response);
 
         } catch (\Exception $e) {
             $reponse = getResponse('', '', 'Oops! Something went wrong', 500);

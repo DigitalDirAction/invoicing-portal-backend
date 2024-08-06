@@ -6,7 +6,8 @@ use App\Models\Payments;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\ValidationException;
+use App\Http\Requests\Payments\AddPaymentRequest;
+use App\Http\Requests\Payments\UpdatePaymentRequest;
 use App\Interfaces\PaymentsRepositoryInterface;
 use F9Web\ApiResponseHelpers;
 
@@ -36,25 +37,14 @@ class PaymentsController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request): JsonResponse
+    public function store(AddPaymentRequest $request): JsonResponse
     {
         try {
 
             $userID = Auth::id();
             $receipt = '';
 
-            $paymentDetails = $request->validate([
-                'invoice_id' => 'required',
-                'invoice_number' => 'required',
-                'customer_name' => 'required',
-                'payment_number' => 'required',
-                'amount_received' => 'required',
-                'amount_due' => 'required',
-                'payment_date' => 'required',
-                'payment_method' => 'required',
-                'reference' => 'required',
-                'receipt' => '',
-            ]);
+            $paymentDetails = $request->validated();
 
             if ($request->hasFile('receipt')) {
 
@@ -74,10 +64,6 @@ class PaymentsController extends Controller
 
             $response = getResponse($payment, '', "Payment added successfully", 201);
             return $this->respondWithSuccess($response);
-        } catch (ValidationException $e) {
-            $response = getResponseIfValidationFailed($e->errors(), '', 'Validation failed', 422);
-            return $this->respondWithSuccess($response);
-
         } catch (\Exception $e) {
             $response = getResponse('', '', 'Oops! Something went wrong', 500);
             return $this->respondWithSuccess($response);
@@ -105,24 +91,14 @@ class PaymentsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $paymentID): JsonResponse
+    public function update(UpdatePaymentRequest $request, $paymentID): JsonResponse
     {
         try {
 
             $userID = Auth::id();
             $receipt = '';
 
-            $paymentDetails = $request->validate([
-                'invoice_number' => 'required',
-                'customer_name' => 'required',
-                'payment_number' => 'required',
-                'amount_received' => 'required',
-                'amount_due' => 'required',
-                'payment_date' => 'required',
-                'payment_method' => 'required',
-                'reference' => 'required',
-                'receipt' => '',
-            ]);
+            $paymentDetails = $request->validated();
 
             if ($request->hasFile('receipt')) {
                 $file = $request->file('receipt');
@@ -139,12 +115,8 @@ class PaymentsController extends Controller
 
             $payment = $this->paymentsRepository->updatePayment($paymentID, $newpaymentDetails);
 
-            $response = getResponse($payment, '', "Payment added successfully", 201);
+            $response = getResponse($payment, '', "Payment updated successfully", 201);
             return $this->respondWithSuccess($response);
-        } catch (ValidationException $e) {
-            $response = getResponseIfValidationFailed($e->errors(), '', 'Validation failed', 422);
-            return $this->respondWithSuccess($response);
-
         } catch (\Exception $e) {
             $response = getResponse('', '', 'Oops! Something went wrong', 500);
             return $this->respondWithSuccess($response);

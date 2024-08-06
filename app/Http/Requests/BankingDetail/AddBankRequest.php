@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\BankingDetail;
 
 use App\Http\Requests\BaseRequest as BaseRequest;
 
-class UpdateUserRequest extends BaseRequest
+class AddBankRequest extends BaseRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,12 +23,10 @@ class UpdateUserRequest extends BaseRequest
     {
         return [
             'user_id' => 'required',
-            'name' => 'required|string|unique:users,name',
-            'email' => 'required|email|unique:users,email,' . $this->input('user_id'),
-            'company' => 'required|string|max:255',
-            'industry' => 'required|string|max:255',
-            'country' => 'required|string|max:255',
-            'phone_number' => 'required|string|max:20|regex:/^[0-9+\(\)#\.\s\/ext-]+$/',
+            'bank_name' => 'required',
+            'branch_code' => 'required',
+            'account_title' => 'required',
+            'iban_number' => 'required|unique:banking_details,iban_number',
         ];
     }
 }

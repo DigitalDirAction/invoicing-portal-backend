@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseRequest as BaseRequest;
 
-class StoreUserRequest extends FormRequest
+class StoreUserRequest extends BaseRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,10 +22,13 @@ class StoreUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|unique:users|max:255',
-            'email' => 'required|unique:users',
+            'name' => 'required',
+            'email' => 'required|email|unique:users,email|max:255',
+            'password' => 'required|string|min:8|confirmed',
+            'company' => 'required|string|max:255',
+            'industry' => 'required|string|max:255',
+            'country' => 'required|string|max:255',
+            'phone_number' => 'required|string|max:20|regex:/^[0-9+\(\)#\.\s\/ext-]+$/',
         ];
     }
-
-    protected $stopOnFirstFailure = true;
 }

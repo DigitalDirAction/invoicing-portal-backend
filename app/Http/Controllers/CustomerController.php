@@ -7,9 +7,8 @@ use Illuminate\Http\Request;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\ValidationException;
 use App\Http\Requests\Customer\addCustomerRequest;
-use App\Http\Requests\UpdateUserRequest;
+use App\Http\Requests\Customer\UpdateCustomerRequest;
 use App\Interfaces\CustomerRepositoryInterface;
 use F9Web\ApiResponseHelpers;
 
@@ -41,23 +40,12 @@ class CustomerController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request): JsonResponse
+    public function store(addCustomerRequest $request): JsonResponse
     {
         $userID = Auth::id();
         try {
 
-            $userDetails = $request->validate([
-                'customer_type' => 'required',
-                'first_name' => 'required',
-                'last_name' => 'required',
-                'company_name' => 'required',
-                'currency' => 'required',
-                'email' => 'email|unique:customers,email',
-                'phone_number' => '',
-                'mobile_number' => 'required',
-                'address' => 'required',
-                'logo' => '',
-            ]);
+            $userDetails = $request->validated();
             $userDetails['created_by'] = $userID;
             $userDetails['updated_by'] = $userID;
 
@@ -77,10 +65,6 @@ class CustomerController extends Controller
 
             $reponse = getResponse($user, '', "Customer Add Successfully", 201);
             return $this->respondWithSuccess($reponse);
-
-        } catch (ValidationException $e) {
-            $response = getResponseIfValidationFailed($e->errors(), '', 'Validation failed', 422);
-            return $this->respondWithSuccess($response);
 
         } catch (\Exception $e) {
             $reponse = getResponse('', '', 'Oops! Something went wrong', 500);
@@ -109,24 +93,12 @@ class CustomerController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request)
+    public function update(UpdateCustomerRequest $request): JsonResponse
     {
         $userID = Auth::id();
         try {
 
-            $userDetails = $request->validate([
-                'customer_id' => 'required',
-                'customer_type' => 'required',
-                'first_name' => 'required',
-                'last_name' => 'required',
-                'company_name' => 'required',
-                'currency' => 'required',
-                'email' => 'email|unique:customers,email,' . $request->customer_id,
-                'phone_number' => '',
-                'mobile_number' => 'required',
-                'address' => 'required',
-                'logo' => '',
-            ]);
+            $userDetails = $request->validated();
             $userDetails['updated_by'] = $userID;
             $logo = '';
 
@@ -143,10 +115,6 @@ class CustomerController extends Controller
 
             $reponse = getResponse($user, '', "Customer Updated Successfully", 201);
             return $this->respondWithSuccess($reponse);
-
-        } catch (ValidationException $e) {
-            $response = getResponseIfValidationFailed($e->errors(), '', 'Validation failed', 422);
-            return $this->respondWithSuccess($response);
 
         } catch (\Exception $e) {
             $reponse = getResponse('', '', 'Oops! Something went wrong', 500);

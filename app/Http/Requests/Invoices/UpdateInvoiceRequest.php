@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests\Invoices;
 
-use App\Http\Requests\BaseRequest as BaseRequest;
+use Illuminate\Foundation\Http\FormRequest;
 
-class storeInvoiceRequest extends BaseRequest
+class UpdateInvoiceRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
