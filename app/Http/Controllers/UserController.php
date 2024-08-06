@@ -117,7 +117,7 @@ class UserController extends Controller
             }
 
             if (!$user || !Hash::check($data['password'], $user['password'])) {
-                $reponse = getResponse('', '', "Invalid email/password", 401);
+                $reponse = getResponse('', '', "Incorrect password", 401);
                 return $this->respondWithSuccess($reponse);
             } else {
 
